@@ -1,26 +1,126 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #05050b;
+  --foreground: #f5f5f7;
+  --base: #05050b;
+  --base-soft: #0a0a14;
+  --text: #f5f5f7;
+  --text-sub: rgba(245, 245, 247, 0.78);
+  --text-muted: rgba(245, 245, 247, 0.55);
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --brass: 232, 195, 118;
+  --cyan: 34, 211, 238;
+  --violet: 167, 139, 250;
+  --emerald: 16, 185, 129;
+  --amber: 245, 158, 11;
+  --danger: 239, 68, 68;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  background: var(--base);
+  color: var(--text);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle 800px at 20% 10%, rgba(232, 195, 118, 0.04), transparent 60%),
+    radial-gradient(circle 700px at 85% 90%, rgba(34, 211, 238, 0.03), transparent 65%);
+}
+
+/* ── HeroFrame ambient animations ─────────────────────────────────────── */
+@keyframes heroTitleFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes heroScanline {
+  0%   { top: -2px; }
+  100% { top: calc(100% + 2px); }
+}
+@keyframes heroOrb1 {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(40px, -28px); }
+  50%  { transform: translate(-20px, 18px); }
+  75%  { transform: translate(28px, 10px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes heroOrb2 {
+  0%   { transform: translate(0, 0); }
+  30%  { transform: translate(-30px, 36px); }
+  60%  { transform: translate(36px, -18px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.15); }
+}
+
+.oaxii-shimmer-text {
+  --shim-a: 34, 211, 238;
+  --shim-b: 232, 195, 118;
+  background-image: linear-gradient(
+    -45deg,
+    rgb(var(--shim-a)) 0%,
+    rgba(255, 255, 255, 0.95) 25%,
+    rgb(var(--shim-b)) 50%,
+    rgba(255, 255, 255, 0.88) 75%,
+    rgb(var(--shim-a)) 100%
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: heroTitleFlow 12s ease infinite;
+  filter:
+    drop-shadow(0 0 14px rgba(var(--shim-a), 0.30))
+    drop-shadow(0 0 36px rgba(var(--shim-a), 0.12));
+}
+
+.oaxii-loss-text {
+  color: #fca5a5;
+  text-shadow: 0 0 12px rgba(239, 68, 68, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oaxii-shimmer-text { animation: none; }
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(232, 195, 118, 0.30);
+}
+
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(232, 195, 118, 0.55), rgba(232, 195, 118, 0));
 }
