@@ -4,6 +4,8 @@ import SpectrumStrip from '@/components/SpectrumStrip'
 import { PageShell, SectionHead, Kicker, GlassPill, FilterRow } from '@/components/ui'
 import { FONT, PALETTE } from '@/design/constants'
 import { STORIES, outletsForStory, claimsForStory } from '@/data/stories'
+import { getLiveStories } from '@/lib/live-stories'
+import LiveStoryCard from '@/components/LiveStoryCard'
 
 const CATEGORIES = [
   { slug: 'all', label: 'ALL' },
@@ -16,11 +18,14 @@ const CATEGORIES = [
   { slug: 'tech', label: 'TECH' },
 ]
 
-export default function HeadlinesPage() {
+export default async function HeadlinesPage() {
+  const liveStories = getLiveStories(60)
+  const useLive = liveStories.length > 0
+
   return (
     <PageShell maxWidth={1320}>
       <section style={{ paddingTop: 36 }}>
-        <Kicker>HEADLINES · {STORIES.length} LIVE STORIES</Kicker>
+        <Kicker>HEADLINES · {useLive ? liveStories.length : STORIES.length} LIVE STORIES</Kicker>
         <h1
           style={{
             marginTop: 10,
@@ -60,7 +65,9 @@ export default function HeadlinesPage() {
             gap: 14,
           }}
         >
-          {STORIES.map((s) => {
+          {useLive
+            ? liveStories.map((s) => <LiveStoryCard key={s.id} story={s} />)
+            : STORIES.map((s) => {
             const outlets = outletsForStory(s.id)
             const claims = claimsForStory(s.id)
             const counts = {
