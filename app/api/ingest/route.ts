@@ -98,10 +98,14 @@ export async function POST() {
     const articles = await fetchGNews(category);
     totalFetched += articles.length;
 
+    let categoryInserted = 0;
+    let categorySkipped = 0;
+    let categoryErrors = 0;
+
     for (const article of articles) {
       try {
         const existing = db.prepare('SELECT id FROM stories WHERE url = ?').get(article.url);
-        if (existing) { totalSkipped++; continue; }
+        if (existing) { categorySkipped++; continue; }
 
         const grades = await gradeArticle(article, category);
         const pillarScores = {
@@ -133,18 +137,22 @@ export async function POST() {
           analysis_notes: grades.analysisNotes,
           graded_at: new Date().toISOString(),
         });
-        totalInserted++;
+        categoryInserted++;
       } catch {
-        totalErrors++;
+        categoryErrors++;
       }
     }
+
+    totalInserted += categoryInserted;
+    totalSkipped += categorySkipped;
+    totalErrors += categoryErrors;
 
     logInsert.run({
       source: `gnews:${category}`,
       fetched: articles.length,
-      inserted: totalInserted,
-      skipped: totalSkipped,
-      errors: totalErrors,
+      inserted: categoryInserted,
+      skipped: categorySkipped,
+      errors: categoryErrors,
     });
   }
 
