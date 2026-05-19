@@ -46,4 +46,13 @@ db.exec(`
   );
 `);
 
+const migrations = [
+  `ALTER TABLE stories ADD COLUMN claims_json TEXT`,
+  `ALTER TABLE stories ADD COLUMN research_depth TEXT`,
+  `ALTER TABLE stories ADD COLUMN sources_found INTEGER`,
+];
+for (const sql of migrations) {
+  try { db.exec(sql); } catch { /* column already exists */ }
+}
+
 export default db;
