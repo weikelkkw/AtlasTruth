@@ -186,3 +186,19 @@ export function computeVerdict(evidence: Evidence): DecisionTrace {
     version: GRADING_VERSION,
   }
 }
+
+export function computeWeightedScore(scores: {
+  accuracy: number;
+  context: number;
+  sourceTransparency: number;
+  sensationalism: number;
+  originalityBias: number;
+}): number {
+  return (
+    scores.accuracy * 0.30 +
+    scores.context * 0.25 +
+    scores.sourceTransparency * 0.20 +
+    scores.sensationalism * 0.15 +
+    scores.originalityBias * 0.10
+  );
+}

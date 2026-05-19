@@ -101,3 +101,12 @@ export function spectrumIndex(b: SpectrumBand): number {
 export function verdictAccentRgb(v: Verdict): string {
   return VERDICT[v].rgb
 }
+
+export function getVerdict(score: number): Verdict {
+  if (!Number.isFinite(score)) return 'unverified'
+  if (score >= 80) return 'verified'
+  if (score >= 65) return 'corroborated'
+  if (score >= 50) return 'mixed'
+  if (score >= 35) return 'disputed'
+  return 'false'
+}
